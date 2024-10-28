@@ -4,9 +4,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from functions import distribution
+
 data= pd.read_csv("data_etiquetada.csv")
 data = data[data['amh'] <= 15]
 data = data[data['total rfa'] <= 30]
+
 st.markdown(
     """
     # Embryoxite LAB
@@ -57,10 +59,24 @@ with col3:
 
 
 df_pred = pd.DataFrame([[age,amh_log,total_rfa]])#
-df_pred2= pd.DataFrame([[age,amh_log,total_rfa]])#
+
+u_edad = 34.60
+u_amh = 2.52929
+u_rfa = 9.9528
+s_edad = 5.4431
+s_amh = 2.38858
+s_rfa = 5.32975
+
+amhn = (amh_log-u_amh)/s_amh
+edadn = (age-u_edad)/s_edad
+rfan = (total_rfa-u_rfa)/s_rfa
+
+df_pred2= pd.DataFrame([[edadn, amhn, rfan]])#
+
 columns= ['edad paciente','amh_log','total rfa']
 df_pred.columns = columns
-columns= ['edad paciente','amh','total rfa']
+
+columns= ['edad paciente','amh',' total rfa']
 df_pred2.columns = columns
 #Transformaciones de los datos
 #Transformación Logarítmica
@@ -74,7 +90,7 @@ df_pred['amh_log'] = df_pred['amh_log'].apply(transform)
 model1 = joblib.load('RL1_model.pkl')
 model2 = joblib.load('RL2_model.pkl')
 
-model3=joblib.load('mejor_modelo_sinboxcox.pkl')
+model3 = joblib.load('RF_model.pkl')
 
 
 # Ejemplo de función para obtener predicciones de los modelos
@@ -104,6 +120,7 @@ def main():
     #if st.button('Predict'):
     prediction1, prediction2, result = obtener_predicciones(df_pred)
     #Ensamble de modelos 
+    
     prediction3= model3.predict(df_pred2)
     # Convertir el resultado a texto para mostrar en la interfaz
     if result == 0:
@@ -116,11 +133,11 @@ def main():
         result_str = "No disponible"
      # Convertir el resultado del tercer modelo a texto para mostrar en la interfaz
     
-    if prediction3 == "1":
+    if prediction3 == 1:
         result_str2 = "Menor o igual a 4"
-    elif prediction3 == "2":
+    elif prediction3 == 2:
         result_str2 = "5-9"
-    elif prediction3 == "3":
+    elif prediction3 == 3:
         result_str2 = "Mayor a 9"
     else:
         result_str2 = "No disponible" 
@@ -133,7 +150,7 @@ def main():
     st.markdown(f"- **Amh:** {amh_log} ng/ml")
     st.markdown(f"- **N° Folículos antrales:** {total_rfa}")    
     
-    col1, col2 = st.columns(2)
+    col1, col2,col3 = st.columns(3)
 
     with col1:
         st.markdown("### Ensamble de Regresores Logísticos (LR)")
@@ -142,8 +159,12 @@ def main():
         st.markdown(f' __Prediccion final__ para el ensamble de modelos(LR) el paciente tiene mayores probabilidades de caer en el rango de ovocitos capturados {"entre" if result == 1 else ""}: **<span style="color:red;">{result_str}</span>**', unsafe_allow_html=True)
     
     with col2:
+        st.markdown("### Random Forest (RF)")
+        st.markdown(f'Para el modelo RF el paciente tiene mayores probabilidades de caer en el rango de ovocitos capturados {"entre" if prediction3=="2" else ""}: **<span style="color:red;">{result_str2}</span>**', unsafe_allow_html=True)
+
+    with col3:
         st.markdown("### Super Vector Classifier (SVC)")
-        st.markdown(f'Para el modelo SVC el paciente tiene mayores probabilidades de caer en el rango de ovocitos capturados {"entre" if prediction3 == '2' else ""}: **<span style="color:red;">{result_str2}</span>**', unsafe_allow_html=True)
+        st.markdown(f'Para el modelo SCV el paciente tiene mayores probabilidades de caer en el rango de ovocitos capturados {"entre" if prediction3=="2" else ""}: **<span style="color:red;">{result_str2}</span>**', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
