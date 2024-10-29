@@ -16,7 +16,7 @@ st.markdown(
     **Modelos actuales:**
 
     - Ensamble de regresores logísticos v1
-    - Super Vector Classifier v1
+    - Random Forest v1
 
     ### ¿Queres saber mas de nosotros?
 
