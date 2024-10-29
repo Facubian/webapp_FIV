@@ -150,7 +150,7 @@ def main():
     st.markdown(f"- **Amh:** {amh_log} ng/ml")
     st.markdown(f"- **N° Folículos antrales:** {total_rfa}")    
     
-    col1, col2,col3 = st.columns(3)
+    col1, col2 = st.columns(2)
 
     with col1:
         st.markdown("### Ensamble de Regresores Logísticos (LR)")
@@ -161,10 +161,6 @@ def main():
     with col2:
         st.markdown("### Random Forest (RF)")
         st.markdown(f'Para el modelo RF el paciente tiene mayores probabilidades de caer en el rango de ovocitos capturados {"entre" if prediction3=="2" else ""}: **<span style="color:red;">{result_str2}</span>**', unsafe_allow_html=True)
-
-    with col3:
-        st.markdown("### Super Vector Classifier (SVC)")
-        st.markdown(f'Para el modelo SCV el paciente tiene mayores probabilidades de caer en el rango de ovocitos capturados {"entre" if prediction3=="2" else ""}: **<span style="color:red;">{result_str2}</span>**', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
