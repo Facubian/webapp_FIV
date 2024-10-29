@@ -76,7 +76,7 @@ df_pred2= pd.DataFrame([[edadn, amhn, rfan]])#
 columns= ['edad paciente','amh_log','total rfa']
 df_pred.columns = columns
 
-columns= ['edad paciente','amh',' total rfa']
+columns= ['edad paciente','amh','total rfa']
 df_pred2.columns = columns
 #Transformaciones de los datos
 #Transformación Logarítmica
